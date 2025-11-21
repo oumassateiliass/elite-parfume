@@ -16,12 +16,22 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Configuration de la connexion MySQL
-const dbConfig = {
+/*const dbConfig = {
   host: 'mysql.railway.internal',
   user: 'root',           // Changez avec votre utilisateur MySQL
   password: 'piVHydYezTeATUyrlnASKvRfIEOuhRIj',           // Changez avec votre mot de passe MySQL
  // database: 'elite_parfums',
   database : 'railway',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+};*/
+const dbConfig = {
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

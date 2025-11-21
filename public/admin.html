@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - ÉLITE PARFUMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Admin Dashboard */
+        .admin-container {
+            display: none;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            font-size: 24px;
+        }
+
+        .btn-logout {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .admin-content {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #888;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-card h3 {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+        }
+
+        .products-table, .orders-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 18px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .product-emoji {
+            font-size: 32px;
+        }
+
+        .btn-edit, .btn-delete, .btn-view {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 8px;
+            transition: transform 0.2s;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-view {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-edit:hover, .btn-delete:hover, .btn-view:hover {
+            transform: scale(1.05);
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-shipped {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .close-modal {
+            font-size: 32px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <h1>🔐 ADMIN LOGIN</h1>
+            <div class="error-message" id="errorMessage">Identifiants incorrects</div>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn-login">SE CONNECTER</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-container" id="adminDashboard">
+        <div class="admin-header">
+            <h1>📊 PANEL ADMINISTRATEUR - ÉLITE PARFUMS</h1>
+            <button class="btn-logout" onclick="logout()">DÉCONNEXION</button>
+        </div>
+
+        <div class="admin-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Tableau de bord</button>
+                <button class="tab-btn" onclick="switchTab('products')">📦 Produits</button>
+                <button class="tab-btn" onclick="switchTab('orders')">🛒 Commandes</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="stats-grid" id="statsGrid"></div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="products" class="tab-content">
+                <div class="section-header">
+                    <h2>📦 Gestion des Produits</h2>
+                    <button class="btn-add" onclick="openProductModal()">+ AJOUTER PRODUIT</button>
+                </div>
+                <div class="products-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Emoji</th>
+                                <th>Nom</th>
+                                <th>Marque</th>
+                                <th>Catégorie</th>
+                                <th>Prix</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders" class="tab-content">
+                <div class="section-header">
+                    <h2>🛒 Commandes</h2>
+                </div>
+                <div class="orders-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Client</th>
+                                <th>Email</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un Produit</h2>
+                <span class="close-modal" onclick="closeProductModal()">×</span>
+            </div>
+            <form onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label>Nom du Produit</label>
+                    <input type="text" id="productName" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Marque</label>
+                        <input type="text" id="productBrand" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Catégorie</label>
+                        <select id="productCategory">
+                            <option value="homme">Homme</option>
+                            <option value="femme">Femme</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prix Actuel (€)</label>
+                        <input type="number" step="0.01" id="productPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ancien Prix (€)</label>
+                        <input type="number" step="0.01" id="productOldPrice" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Emoji / Icône</label>
+                        <input type="text" id="productEmoji" placeholder="🌹" maxlength="2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" id="productStock" value="100" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="productDescription" rows="3"></textarea>
+                </div>
+
+                <input type="hidden" id="productId">
+                <button type="submit" class="btn-save">💾 ENREGISTRER</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Détails de la commande</h2>
+                <span class="close-modal" onclick="closeOrderModal()">×</span>
+            </div>
+            <div id="orderDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let authToken = '';
+        let editingProductId = null;
+
+        // Login
+        async function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.token;
+                    localStorage.setItem('adminToken', authToken);
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    loadDashboard();
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur de connexion au serveur');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            authToken = '';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+        }
+
+        // Check if already logged in
+        window.onload = function() {
+            const token = localStorage.getItem('adminToken');
+            if (token) {
+                authToken = token;
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadDashboard();
+            }
+        };
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+
+            if (tab === 'dashboard') loadStats();
+            if (tab === 'products') loadProducts();
+            if (tab === 'orders') loadOrders();
+        }
+
+        async function loadDashboard() {
+            await loadStats();
+            await loadProducts();
+            await loadOrders();
+        }
+
+        // Stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const stats = await response.json();
+
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card">
+                        <h3>Total Produits</h3>
+                        <div class="stat-value">${stats.totalProducts}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Valeur Stock</h3>
+                        <div class="stat-value">${stats.stockValue.toFixed(2)}€</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Commandes</h3>
+                        <div class="stat-value">${stats.totalOrders}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Commandes en attente</h3>
+                        <div class="stat-value">${stats.pendingOrders}</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Products
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const products = await response.json();
+
+                document.getElementById('productsTableBody').innerHTML = products.map(p => {
+                    const discount = Math.round((1 - p.price / p.old_price) * 100);
+                    return `
+                        <tr>
+                            <td class="product-emoji">${p.emoji || '💎'}</td>
+                            <td><strong>${p.name}</strong></td>
+                            <td>${p.brand}</td>
+                            <td>${p.category.toUpperCase()}</td>
+                            <td><strong>${p.price.toFixed(2)}€</strong> <span style="color:#999; text-decoration:line-through;">${p.old_price.toFixed(2)}€</span></td>
+                            <td>${p.stock}</td>
+                            <td>
+                                <button class="btn-edit" onclick="editProduct(${p.id})">✏️ Modifier</button>
+                                <button class="btn-delete" onclick="deleteProduct(${p.id})">🗑️ Supprimer</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        function openProductModal(id = null) {
+            editingProductId = id;
+            document.getElementById('productModal').classList.add('active');
+
+            if (id) {
+                fetch(`${API_URL}/products/${id}`)
+                    .then(r => r.json())
+                    .then(p => {
+                        document.getElementById('modalTitle').textContent = 'Modifier le Produit';
+                        document.getElementById('productName').value = p.name;
+                        document.getElementById('productBrand').value = p.brand;
+                        document.getElementById('productCategory').value = p.category;
+                        document.getElementById('productPrice').value = p.price;
+                        document.getElementById('productOldPrice').value = p.old_price;
+                        document.getElementById('productEmoji').value = p.emoji;
+                        document.getElementById('productStock').value = p.stock;
+                        document.getElementById('productDescription').value = p.description || '';
+                    });
+            } else {
+                document.getElementById('modalTitle').textContent = 'Ajouter un Produit';
+                document.getElementById('productName').value = '';
+                document.getElementById('productBrand').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productOldPrice').value = '';
+                document.getElementById('productEmoji').value = '';
+                document.getElementById('productStock').value = '100';
+                document.getElementById('productDescription').value = '';
+            }
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        async function saveProduct(event) {
+            event.preventDefault();
+
+            const productData = {
+                name: document.getElementById('productName').value,
+                brand: document.getElementById('productBrand').value,
+                category: document.getElementById('productCategory').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                old_price: parseFloat(document.getElementById('productOldPrice').value),
+                emoji: document.getElementById('productEmoji').value,
+                stock: parseInt(document.getElementById('productStock').value),
+                description: document.getElementById('productDescription').value
+            };
+
+            try {
+                const url = editingProductId 
+                    ? `${API_URL}/products/${editingProductId}`
+                    : `${API_URL}/products`;
+                
+                const method = editingProductId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(productData)
+                });
+
+                if (response.ok) {
+                    closeProductModal();
+                    loadProducts();
+                    loadStats();
+                    alert('Produit enregistré avec succès !');
+                } else {
+                    alert('Erreur lors de l\'enregistrement');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur de connexion');
+            }
+        }
+
+        function editProduct(id) {
+            openProductModal(id);
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/products/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    loadProducts();
+                    loadStats();
+                    alert('Produit supprimé !');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Orders
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}/orders`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const orders = await response.json();
+
+                document.getElementById('ordersTableBody').innerHTML = orders.map(o => {
+                    const statusClass = `status-${o.status}`;
+                    return `
+                        <tr>
+                            <td><strong>#${o.id}</strong></td>
+                            <td>${o.customer_name}</td>
+                            <td>${o.customer_email}</td>
+                            <td><strong>${o.total_amount.toFixed(2)}€</strong></td>
+                            <td><span class="status-badge ${statusClass}">${o.status}</span></td>
+                            <td>${new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
+                            <td>
+                                <button class="btn-view" onclick="viewOrder(${o.id})">👁️ Voir</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function viewOrder(id) {
+            try {
+                const response = await fetch(`${API_URL}/orders/${id}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const order = await response.json();
+
+                document.getElementById('orderDetails').innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <h3>Commande #${order.id}</h3>
+                        <p><strong>Client:</strong> ${order.customer_name}</p>
+                        <p><strong>Email:</strong> ${order.customer_email}</p>
+                        <p><strong>Téléphone:</strong> ${order.customer_phone}</p>
+                        <p><strong>Adresse:</strong> ${order.customer_address}</p>
+                        <p><strong>Date:</strong> ${new Date(order.created_at).toLocaleString('fr-FR')}</p>
+                    </div>
+                    <h4>Articles commandés:</h4>
+                    <table style="width:100%; margin-top:10px;">
+                        <thead>
+                            <tr style="background:#f5f5f5;">
+                                <th style="padding:10px; text-align:left;">Produit</th>
+                                <th style="padding:10px;">Qté</th>
+                                <th style="padding:10px; text-align:right;">Prix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${order.items.map(item => `
+                                <tr>
+                                    <td style="padding:10px;">${item.product_name}</td>
+                                    <td style="padding:10px; text-align:center;">${item.quantity}</td>
+                                    <td style="padding:10px; text-align:right;">${(item.price * item.quantity).toFixed(2)}€</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <div style="text-align:right; margin-top:20px; font-size:20px; font-weight:bold;">
+                        Total: ${order.total_amount.toFixed(2)}€
+                    </div>
+                    <div style="margin-top:20px;">
+                        <label>Changer le statut:</label>
+                        <select id="orderStatus" style="padding:10px; margin-left:10px;">
+                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>En attente</option>
+                            <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmée</option>
+                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Expédiée</option>
+                        </select>
+                        <button onclick="updateOrderStatus(${order.id})" style="padding:10px 20px; margin-left:10px; background:#667eea; color:white; border:none; border-radius:5px; cursor:pointer;">Mettre à jour</button>
+                    </div>
+                `;
+
+                document.getElementById('orderModal').classList.add('active');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.remove('active');
+        }
+
+        async function updateOrderStatus(orderId) {
+            const status = document.getElementById('orderStatus').value;
+
+            try {
+                const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (response.ok) {
+                    closeOrderModal();
+                    loadOrders();
+                    alert('Statut mis à jour !');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            if (document.getElementById('adminDashboard').style.display !== 'none') {
+                loadStats();
+                loadOrders();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

@@ -69,6 +69,11 @@ async function initDatabase() {
     console.log('1. MySQL est démarré');
     console.log('2. Utilisateur et mot de passe corrects dans dbConfig');
     console.log('3. Installez mysql2: npm install mysql2');
+    console.log('HOST:', process.env.MYSQLHOST);
+    console.log('USER:', process.env.MYSQLUSER);
+    console.log('PASSWORD:', process.env.MYSQLPASSWORD ? 'OK' : 'EMPTY');
+    console.log('DATABASE:', process.env.MYSQLDATABASE);
+    console.log('PORT:', process.env.MYSQLPORT);
     process.exit(1);
   }
 }

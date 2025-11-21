@@ -513,14 +513,9 @@
                 </div>
 
                 <div class="form-row">
-                    <!-- <div class="form-group">
+                    <div class="form-group">
                         <label>Emoji / Icône</label>
                         <input type="text" id="productEmoji" placeholder="🌹" maxlength="2" required>
-                    </div> -->
-                    <div class="form-group">
-                        <label>Image du produit</label>
-                        <input type="file" id="productImage" accept="image/*" onchange="previewImage(event)">
-                        <img id="imagePreview" src="" alt="Aperçu" style="margin-top:10px; max-width:100px; display:none; border-radius:10px;">
                     </div>
                     <div class="form-group">
                         <label>Stock</label>
@@ -551,21 +546,6 @@
     </div>
 
     <script>
-        function previewImage(event) {
-    const input = event.target;
-    const preview = document.getElementById('imagePreview');
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        }
-        reader.readAsDataURL(input.files[0]);
-    } else {
-        preview.src = '';
-        preview.style.display = 'none';
-    }
-}
         //const API_URL = 'http://localhost:3000/api';
 	 const API_URL = 'https://elite-parfume-production.up.railway.app/api';
         let authToken = '';
@@ -676,7 +656,7 @@
                     const discount = Math.round((1 - p.price / p.old_price) * 100);
                     return `
                         <tr>
-                            <td><img src="${p.image || 'default.png'}" alt="${p.name}" style="width:50px; border-radius:8px;"></td>
+                            <td class="product-emoji">${p.emoji || '💎'}</td>
                             <td><strong>${p.name}</strong></td>
                             <td>${p.brand}</td>
                             <td>${p.category.toUpperCase()}</td>
@@ -727,95 +707,50 @@
         function closeProductModal() {
             document.getElementById('productModal').classList.remove('active');
         }
+
         async function saveProduct(event) {
-    event.preventDefault();
+            event.preventDefault();
 
-    const productData = new FormData();
-    productData.append('name', document.getElementById('productName').value);
-    productData.append('brand', document.getElementById('productBrand').value);
-    productData.append('category', document.getElementById('productCategory').value);
-    productData.append('price', parseFloat(document.getElementById('productPrice').value));
-    productData.append('old_price', parseFloat(document.getElementById('productOldPrice').value));
-    productData.append('stock', parseInt(document.getElementById('productStock').value));
-    productData.append('description', document.getElementById('productDescription').value);
+            const productData = {
+                name: document.getElementById('productName').value,
+                brand: document.getElementById('productBrand').value,
+                category: document.getElementById('productCategory').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                old_price: parseFloat(document.getElementById('productOldPrice').value),
+                emoji: document.getElementById('productEmoji').value,
+                stock: parseInt(document.getElementById('productStock').value),
+                description: document.getElementById('productDescription').value
+            };
 
-    const imageFile = document.getElementById('productImage').files[0];
-    if (imageFile) {
-        productData.append('image', imageFile);
-    }
-
-    try {
-        const url = editingProductId 
-            ? `${API_URL}/products/${editingProductId}`
-            : `${API_URL}/products`;
-        
-        const method = editingProductId ? 'PUT' : 'POST';
-
-        const response = await fetch(url, {
-            method,
-            headers: {
-                'Authorization': `Bearer ${authToken}`
-            },
-            body: productData
-        });
-
-        if (response.ok) {
-            closeProductModal();
-            loadProducts();
-            loadStats();
-            alert('Produit enregistré avec succès !');
-        } else {
-            alert('Erreur lors de l\'enregistrement');
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Erreur de connexion');
-    }
-}
-
-        // async function saveProduct(event) {
-        //     event.preventDefault();
-
-        //     const productData = {
-        //         name: document.getElementById('productName').value,
-        //         brand: document.getElementById('productBrand').value,
-        //         category: document.getElementById('productCategory').value,
-        //         price: parseFloat(document.getElementById('productPrice').value),
-        //         old_price: parseFloat(document.getElementById('productOldPrice').value),
-        //         emoji: document.getElementById('productEmoji').value,
-        //         stock: parseInt(document.getElementById('productStock').value),
-        //         description: document.getElementById('productDescription').value
-        //     };
-
-        //     try {
-        //         const url = editingProductId 
-        //             ? `${API_URL}/products/${editingProductId}`
-        //             : `${API_URL}/products`;
+            try {
+                const url = editingProductId 
+                    ? `${API_URL}/products/${editingProductId}`
+                    : `${API_URL}/products`;
                 
-        //         const method = editingProductId ? 'PUT' : 'POST';
+                const method = editingProductId ? 'PUT' : 'POST';
 
-        //         const response = await fetch(url, {
-        //             method,
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'Authorization': `Bearer ${authToken}`
-        //             },
-        //             body: JSON.stringify(productData)
-        //         });
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(productData)
+                });
 
-        //         if (response.ok) {
-        //             closeProductModal();
-        //             loadProducts();
-        //             loadStats();
-        //             alert('Produit enregistré avec succès !');
-        //         } else {
-        //             alert('Erreur lors de l\'enregistrement');
-        //         }
-        //     } catch (error) {
-        //         console.error('Erreur:', error);
-        //         alert('Erreur de connexion');
-        //     }
-        // }
+                if (response.ok) {
+                    closeProductModal();
+                    loadProducts();
+                    loadStats();
+                    alert('Produit enregistré avec succès !');
+                } else {
+                    alert('Erreur lors de l\'enregistrement');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur de connexion');
+            }
+        }
 
         function editProduct(id) {
             openProductModal(id);

@@ -630,7 +630,7 @@
                     </div>
                     <div class="stat-card">
                         <h3>Valeur Stock</h3>
-                        <div class="stat-value">${stats.stockValue.toFixed(2)}€</div>
+                        <div class="stat-value">${parseFlaot(stats.stockValue).toFixed(2)}€</div>
                     </div>
                     <div class="stat-card">
                         <h3>Total Commandes</h3>
@@ -660,7 +660,7 @@
                             <td><strong>${p.name}</strong></td>
                             <td>${p.brand}</td>
                             <td>${p.category.toUpperCase()}</td>
-                            <td><strong>${p.price.toFixed(2)}€</strong> <span style="color:#999; text-decoration:line-through;">${p.old_price.toFixed(2)}€</span></td>
+                            <td><strong>${parseFloat(p.price).toFixed(2)}€</strong> <span style="color:#999; text-decoration:line-through;">${parseFlaat(p.old_price).toFixed(2)}€</span></td>
                             <td>${p.stock}</td>
                             <td>
                                 <button class="btn-edit" onclick="editProduct(${p.id})">✏️ Modifier</button>
@@ -790,7 +790,7 @@
                             <td><strong>#${o.id}</strong></td>
                             <td>${o.customer_name}</td>
                             <td>${o.customer_email}</td>
-                            <td><strong>${o.total_amount.toFixed(2)}€</strong></td>
+                            <td><strong>${parseFlaot(o.total_amount).toFixed(2)}€</strong></td>
                             <td><span class="status-badge ${statusClass}">${o.status}</span></td>
                             <td>${new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
                             <td>
@@ -840,7 +840,7 @@
                         </tbody>
                     </table>
                     <div style="text-align:right; margin-top:20px; font-size:20px; font-weight:bold;">
-                        Total: ${order.total_amount.toFixed(2)}€
+                        Total: ${parseFloat(order.total_amount).toFixed(2)}€
                     </div>
                     <div style="margin-top:20px;">
                         <label>Changer le statut:</label>

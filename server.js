@@ -14,7 +14,11 @@ const SECRET_KEY = 'votre_secret_key_changez_moi_en_production';
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+const express = require('express');
+const mysql = require('mysql2/promise');
 
+const app = express();
+const PORT = process.env.PORT || 3000;
 // Configuration de la connexion MySQL
 /*const dbConfig = {
   host: 'mysql.railway.internal',

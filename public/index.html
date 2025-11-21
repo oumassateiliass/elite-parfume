@@ -586,7 +586,7 @@
                             <div class="product-brand">${product.brand}</div>
                             <div class="product-name">${product.name}</div>
                             <div class="product-price">
-                                <span class="price-current">${product.price.toFixed(2)}€</span>
+                                <span class="price-current">${parseFloat(product.price).toFixed(2)}€</span>
                                 <span class="price-original">${product.old_price.toFixed(2)}€</span>
                             </div>
                             <button class="btn-add-cart" onclick="addToCart(${product.id})">AJOUTER AU PANIER</button>

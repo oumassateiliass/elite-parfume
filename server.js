@@ -19,8 +19,9 @@ app.use(express.static('public'));
 const dbConfig = {
   host: 'mysql.railway.internal',
   user: 'root',           // Changez avec votre utilisateur MySQL
-  password: 'dnspIVDyoBXpXaHjxwnompTmElGKiLyy',           // Changez avec votre mot de passe MySQL
-  database: 'elite_parfums',
+  password: 'piVHydYezTeATUyrlnASKvRfIEOuhRIj',           // Changez avec votre mot de passe MySQL
+ // database: 'elite_parfums',
+  database : 'railway',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
